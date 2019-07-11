@@ -7,6 +7,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -25,8 +26,8 @@ public class MainActivity extends AppCompatActivity {
     // ArrayList for person names
     //ArrayList<String> personNames = new ArrayList<>(Arrays.asList("Chair 1", "C02", "Chair 3", "Chair 4", "Chair 5", "Chair 6", "Chair 7","Chair 8", "Chair 9", "Chair 10", "Chair 11", "Chair 12", "Chair 13", "Chair 14"));
     //ArrayList<Integer> personImages = new ArrayList<>(Arrays.asList(R.drawable.sample_1, R.drawable.sample_12, R.drawable.sample_13, R.drawable.sample_14, R.drawable.sample_2, R.drawable.sample_22, R.drawable.sample_23,R.drawable.sample_24, R.drawable.sample_3, R.drawable.sample_32, R.drawable.sample_33, R.drawable.sample_34, R.drawable.sample_4, R.drawable.sample_42));
-   // ArrayList<String> chairNames0 = new ArrayList<>(Arrays.asList("c01", "c02", "c03", "c04", "c05"));
-    //ArrayList<Integer> chairImages0 = new ArrayList<>(Arrays.asList(R.drawable.sample_1, R.drawable.sample_2, R.drawable.sample_3, R.drawable.sample_4, R.drawable.sample_5 ));
+   ArrayList<String> chairNames0 = new ArrayList<>(Arrays.asList("c01", "c02", "c03", "c04", "c05"));
+   ArrayList<Integer> chairImages0 = new ArrayList<>(Arrays.asList(R.drawable.sample_1, R.drawable.sample_2, R.drawable.sample_3, R.drawable.sample_4, R.drawable.sample_5 ));
 
 
     @Override
@@ -35,7 +36,6 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         //MyListData[] myListData = new MyListData[3] ;
-
         //myListData[0] = new MyListData("Email", R.drawable.sample_1);
         //myListData[1] =new MyListData("Info", R.drawable.sample_12);
         //myListData[2] = new MyListData("Delete", R.drawable.sample_13);
@@ -48,8 +48,12 @@ public class MainActivity extends AppCompatActivity {
         //  call the constructor of CustomAdapter to send the reference and data to Adapter
 
         //switch to use new expandable adapter
-        //CustomAdapter customAdapter = new CustomAdapter(MainActivity.this, chairNames0,chairImages0);
+        CustomAdapter customAdapter = new CustomAdapter(MainActivity.this, chairNames0,chairImages0);
 
+
+        //-------------------------------------------------------------------------------------
+        //remove the expandable list
+        /*
         ArrayList<ChairCatalog> chairCatalog = new ArrayList();
 
         ArrayList<Chair> chairs1 = new ArrayList<>();
@@ -92,21 +96,11 @@ public class MainActivity extends AppCompatActivity {
         ChairCatalog chairCatalog5 = new ChairCatalog("c05", chairs5);
         chairCatalog.add(chairCatalog5);
 
-
-
-
-
-
-
-
-
-
-
-
-
-
         ChairAdapter customAdapter = new ChairAdapter(chairCatalog);
-       recyclerView.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL));
+        */
+        //----------------------------------------------------
+
+        recyclerView.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL));
         recyclerView.setAdapter(customAdapter); // set the Adapter to RecyclerView
 
 
@@ -161,6 +155,18 @@ public class MainActivity extends AppCompatActivity {
 */
 
     }
-
+/*
+    public void startGalleryActivity() {
+        ArrayList<String> images = new ArrayList<String>();
+        images.add("http://sourcey.com/images/stock/salvador-dali-metamorphosis-of-narcissus.jpg");
+        images.add("http://sourcey.com/images/stock/salvador-dali-the-dream.jpg");
+        images.add("http://sourcey.com/images/stock/salvador-dali-persistence-of-memory.jpg");
+        images.add("http://sourcey.com/images/stock/simpsons-persistence-of-memory.jpg");
+        images.add("http://sourcey.com/images/stock/salvador-dali-the-great-masturbator.jpg");
+        Intent intent = new Intent(MainActivity.this, GalleryActivity.class);
+        intent.putStringArrayListExtra(GalleryActivity.EXTRA_NAME, images);
+        startActivity(intent);
+    }
+    */
 
 }

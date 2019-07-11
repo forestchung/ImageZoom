@@ -16,6 +16,11 @@ public class MyPhotoAttacher extends PhotoViewAttacher implements View.OnLongCli
               super(imageView);
     }
 
+    /*
+    public MyPhotoAttacher (ViewPager imageView){
+        super(imageView);
+    }
+*/
     FirebaseDatabase database = FirebaseDatabase.getInstance();
 
     @Override
