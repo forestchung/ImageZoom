@@ -22,8 +22,6 @@ import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.davemorrissey.labs.subscaleview.ImageSource;
 import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 
 import junit.framework.Assert;
 
@@ -33,7 +31,7 @@ import java.util.ArrayList;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-//import butterknife.InjectView;
+
 
 public class GalleryActivity extends AppCompatActivity {
     public static final String TAG = "GalleryActivity";
@@ -41,9 +39,8 @@ public class GalleryActivity extends AppCompatActivity {
 
     private ArrayList<String> _images;
     private GalleryPagerAdapter _adapter;
-    FirebaseDatabase database = FirebaseDatabase.getInstance();
-   // MyPhotoAttacher photoViewAttacher;
 
+   Logger logger = Logger.getInstance();
 
     @BindView(R.id.pager) ViewPager _pager;
     @BindView(R.id.thumbnails) LinearLayout _thumbnails;
@@ -63,20 +60,13 @@ public class GalleryActivity extends AppCompatActivity {
         _pager.setAdapter(_adapter);
         _pager.setOffscreenPageLimit(6); // how many images to load into memory
 
-        //_pager.setOnTouchListener(touchListener);  //touch
-        //_pager.setOnTouchListener(handleTouch);
-
-       // LayoutInflater inflater = LayoutInflater.from(view.getContext());
-        //View view = inflater.inflate( R.layout.myNewInflatedLayout, null );
-        //View mView = inflater.inflate(R.layout.dialog_custom_layout, null);
-        //Log.d(TAG, "Custom Adapter  onClick"  );
-
-        //PhotoView photoView = mView.findViewById(R.id.imageView);
-
         _closeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d(TAG, "Close clicked");
+                Instant instant = Instant.now(); // Current moment in UTC.
+                Log.d(TAG, "Close photo zoom Timestamp: -"+instant.toEpochMilli());
+logger.log("Close photo zoom Timestamp: -"+instant.toEpochMilli());
+
                 finish();
             }
         });
@@ -129,25 +119,14 @@ public class GalleryActivity extends AppCompatActivity {
             thumbView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Log.d(TAG, "Thumbnail clicked");
+                  //  Log.d(TAG, "Thumbnail clicked position: " + position );
 
                     // Write a message to the database
                     Instant instant = Instant.now(); // Current moment in UTC.
-                    Log.d("Touch","Timestamp: -"+instant.toEpochMilli());
-                    //FirebaseDatabase database = FirebaseDatabase.getInstance();
-                    //DatabaseReference myRef = database.getReference(String.valueOf(instant.toEpochMilli()));
-                    //myRef.setValue("Touch " + v.toString());
+                   // Log.d("Touch","Timestamp: -"+instant.toEpochMilli());
+                    Log.d(TAG, " Timestamp: -"+instant.toEpochMilli() + " Thumbnail clicked position: " + position );
+logger.log(" Timestamp: -"+instant.toEpochMilli() + " Thumbnail clicked position: " + position );
 
-                    //Log.d("Touch","touch happened -"+event.getAction());
-                    //Log.d("Touch","Timestamp: -"+instant.toEpochMilli());
-                    //Log.d("Touch","MotionEvent: -"+event.toString() + " PressureSize: " +event.getSize());
-
-                    // Write a message to the database
-
-                    //DatabaseReference myRef = database.getReference(String.valueOf(instant.toEpochMilli()));
-                    //myRef.setValue("Action: " + event.getAction() + " Event: " + event.toString() + " Pressure: " + event.getSize());
-
-                    // Set the pager position when thumbnail clicked
                     _pager.setCurrentItem(position);
                 }
             });
@@ -158,8 +137,7 @@ public class GalleryActivity extends AppCompatActivity {
             final SubsamplingScaleImageView imageView =
                     (SubsamplingScaleImageView) itemView.findViewById(R.id.image_gallery);
 
-            //important-----------------------------------------------------
-            imageView.setOnTouchListener(handleTouch);
+
 
             // Asynchronously load the image and set the thumbnail and pager view
             Glide.with(_context)
@@ -170,9 +148,12 @@ public class GalleryActivity extends AppCompatActivity {
                         public void onResourceReady(Bitmap bitmap, GlideAnimation anim) {
                             imageView.setImage(ImageSource.bitmap(bitmap));
                             thumbView.setImageBitmap(bitmap);
+                            //important-----------------------------------------------------
+                            // imageView.setOnTouchListener(handleTouch);
                         }
                     });
-
+            //important-----------------------------------------------------
+            imageView.setOnTouchListener(handleTouch);
             return itemView;
         }
 
@@ -182,6 +163,8 @@ public class GalleryActivity extends AppCompatActivity {
 
         }
     }
+
+
 
     private View.OnTouchListener handleTouch = new View.OnTouchListener() {
 
@@ -195,25 +178,30 @@ public class GalleryActivity extends AppCompatActivity {
                 case MotionEvent.ACTION_DOWN:
                     Log.i("TAG", "touched down");
                     break;
+
+                    /* cannot use action move, otherwise the zoom will not work
                 case MotionEvent.ACTION_MOVE:
                     Log.i("TAG", "moving: (" + x + ", " + y + ")");
                     break;
+                    */
                 case MotionEvent.ACTION_UP:
-                    Log.i("TAG", "touched up");
+                   Log.i("TAG", "touched up");
                     break;
+                default:
+                   // Log.d("TAG", "moving: (" + x + ", " + y + ")");
+                    return false;
             }
 
-            Log.d("Touch","touch happened -"+event.getAction());
+
             Instant instant = Instant.now(); // Current moment in UTC.
-            Log.d("Touch","Timestamp: -"+instant.toEpochMilli());
-            Log.d("Touch","MotionEvent: -"+event.toString() + " PressureSize: " +event.getSize());
 
-            // Write a message to the database
 
-            DatabaseReference myRef = database.getReference(String.valueOf(instant.toEpochMilli()));
-            myRef.setValue("Action: " + event.getAction() + " Event: " + event.toString() + " Pressure: " + event.getSize());
+Log.d(TAG, "Action: " + event.getAction() + " Event: " + event.toString() + " Pressure: " + event.getSize() + " moving: (" + x + ", " + y + ")");
+         logger.log("Action: " + event.getAction() + " Event: " + event.toString() + " Pressure: " + event.getSize() + " moving: (" + x + ", " + y + ")");
 
             return true;
         }
     };
+
+
 }
